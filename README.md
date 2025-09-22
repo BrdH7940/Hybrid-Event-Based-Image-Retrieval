@@ -6,6 +6,24 @@ Given a real-world caption, this project retrieves matching images from a large 
   <img src="util/overview.png" width="700" />
 </p>
 
+## Methodology
+
+<p align="center">
+  <img src="util/Pipeline.JPG" width="1000" />
+</p>
+
+Firstly, the framework operates in an **offline preprocessing phase to handle visual and textual data independently**. For images, it employs OpenCLIP (ViT-bigG-14) to generate fixed-length, L2-normalized embedding vectors. For text, it introduces a critical semantic chunking strategy on the article content to substantially alleviate multifaceted-contextual information and preserve coherence, which significantly improved performance from an initial score of 0.17 to 0.52. These chunks are then embedded using the Nomic-v1.5 model for dense semantic representation, while a parallel BM25 index is constructed for sparse lexical matching.
+
+Secondly, during the **online retrieval phase, the system performs a hybrid article retrieval**. An incoming query is processed with a dual embedding strategy to generate both a dense vector (via Nomic) for semantic meaning and a visual vector (via OpenCLIP) for image comparison. The system retrieves an initial set of articles by combining the results from two parallel retrieval methods: dense retrieval, which calculates cosine similarity between the query and text chunks, and sparse retrieval using BM25 scores. These two ranked lists are merged using Reciprocal Rank Fusion (RRF) to leverage the complementary strengths of both semantic and lexical matching:
+
+$$
+RRF(A_j) = \frac{1}{k + \text{rank}_{\text{dense}}(A_j)} + \frac{1}{k + \text{rank}_{\text{sparse}}(A_j)}
+$$
+
+Finally, the system executes a **multi-stage re-ranking process** on the images associated with the top-retrieved articles. For each candidate image, a cross-modal similarity score is calculated between the visual query embedding and the image's embedding. This score is enhanced by a contextual boosting mechanism that incorporates the semantic similarity between the query and the parent article's text chunks. The final image ranking is determined by a weighted fusion of this contextually-boosted visual score and the parent article's own relevance score, effectively grounding the visual match in its textual context.
+
+For more details, you can check our paper.
+
 ## Evaluation
 
 The final result is evaluated on the **OpenEvents V1** dataset, with the ultimate ranking mainly adhere to the **Overall Score** that combines the following five metrics:
