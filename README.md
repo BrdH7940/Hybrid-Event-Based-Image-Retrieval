@@ -1,5 +1,7 @@
 # Overview
 
-Given a realistic caption, participants are required to retrieve corresponding images from a provided database. This retrieval task is a fundamental task in computer vision and natural language processing that requires learning a joint representation space where visual and textual modalities can be meaningfully compared. Image retrieval with textual queries is widely used in search engines, medical imaging, e-commerce, and digital asset management. However, challenges remain, such as handling abstract or ambiguous queries, improving retrieval efficiency for large-scale datasets, and ensuring robustness to linguistic variations and biases in training data. This image retrieval track aims to tackle issues of realistic information from events in real life.
+Given a real-world caption, this project retrieves matching images from a large database. It addresses challenges such as significantly long, ambiguous or abstract queries, large-scale efficiency, and bias or variation in language. **What makes it unique from other image retrieval tasks**: the textual captions are **drawn from articles** and thus **combine event information and semantic image content**, not just simplified tags.
 
-![Overview](util\overview.png)
+<p align="center">
+  <img src="util/overview.png" width="700" />
+</p>
